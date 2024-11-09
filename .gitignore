@@ -1,0 +1,10 @@
+/bin
+/vendor
+*.exe
+*.log
+*.out
+/bin
+/vendor
+*.exe
+*.log
+*.out
