@@ -21,3 +21,16 @@ func processReceipt(c *gin.Context) {
 	receipts[id] = receipt
 	c.JSON(http.StatusOK, gin.H{"id": id})
 }
+
+func getPoints(c *gin.Context) {
+	id := c.Param("id")
+	receipt, exists := receipts[id]
+
+	if !exists {
+		c.JSON(http.StatusNotFound, gin.H{"error": "Receipt not found"})
+		return
+	}
+
+	points := calculatePoints(receipt)
+	c.JSON(http.StatusOK, gin.H{"Points": points})
+}
