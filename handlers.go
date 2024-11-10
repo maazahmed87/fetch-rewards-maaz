@@ -34,3 +34,7 @@ func getPoints(c *gin.Context) {
 	points := calculatePoints(receipt)
 	c.JSON(http.StatusOK, gin.H{"Points": points})
 }
+
+func getHealth(c *gin.Context) {
+	c.JSON(http.StatusOK, gin.H{"status": "OK"})
+}
