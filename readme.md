@@ -1,0 +1,1 @@
+https://github.com/eleniums/code-conventions/blob/master/go/style.md

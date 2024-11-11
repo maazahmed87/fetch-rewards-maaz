@@ -100,16 +100,19 @@ func calculateTotalPoints(totalStr string) int {
 
 // calculateItemsPoints adds points based on each item's short description length and price
 func calculateItemsPoints(items []Item) int {
-	points := (len(items) / 2) * 5 // Adds 5 points for every two items
+	points := 0
+
+	points += (len(items) / 2) * 5 // Adds 5 points for every two items
+
 	for _, item := range items {
 		// Checks if the length of short description is divisible by 3
 		if len(strings.TrimSpace(item.ShortDescription))%3 == 0 {
 			price, err := strconv.ParseFloat(item.Price, 64)
-			if err == nil {
-				points += int(math.Ceil(price * 0.2))
-			} else {
-				log.Printf("Error parsing item price: %v", err)
+			if err != nil {
+				log.Printf("Error parsing item price for '%s': %v", item.ShortDescription, err)
+				continue // Skip this item if there's an error
 			}
+			points += int(math.Ceil(price * 0.2))
 		}
 	}
 	return points
@@ -120,7 +123,7 @@ func calculateDatePoints(dateStr string) int {
 	points := 0
 	purchaseDate, err := time.Parse("2006-01-02", dateStr)
 	if err != nil {
-		log.Printf("Error parsing purchase date: %v", err)
+		log.Printf("Error parsing purchase date '%s': %v", dateStr, err)
 		return points
 	}
 	if purchaseDate.Day()%2 != 0 {
@@ -134,7 +137,7 @@ func calculateTimePoints(timeStr string) int {
 	points := 0
 	purchaseTime, err := time.Parse("15:04", timeStr)
 	if err != nil {
-		log.Printf("Error parsing purchase time: %v", err)
+		log.Printf("Error parsing purchase time '%s': %v", timeStr, err)
 		return points
 	}
 
