@@ -1,8 +1,10 @@
 package main
 
 import (
+	"errors"
 	"log"
 	"math"
+	"regexp"
 	"strconv"
 	"strings"
 	"time"
@@ -98,8 +100,9 @@ func calculateTotalPoints(totalStr string) int {
 
 // calculateItemsPoints adds points based on each item's short description length and price
 func calculateItemsPoints(items []Item) int {
-	points := (len(items) / 2) * 5
+	points := (len(items) / 2) * 5 // Adds 5 points for every two items
 	for _, item := range items {
+		// Checks if the length of short description is divisible by 3
 		if len(strings.TrimSpace(item.ShortDescription))%3 == 0 {
 			price, err := strconv.ParseFloat(item.Price, 64)
 			if err == nil {

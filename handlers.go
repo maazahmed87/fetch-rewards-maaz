@@ -7,8 +7,11 @@ import (
 	"github.com/google/uuid"
 )
 
+// Storing receipts in-memory
 var receipts = make(map[string]Receipt)
 
+// processReceipt handles the creation of a new receipt. It binds the incoming JSON data to the Receipt struct, validates it
+// and then stores it in memory in the receipts in-memory map with a unique ID
 func processReceipt(c *gin.Context) {
 	var receipt Receipt
 
@@ -27,6 +30,8 @@ func processReceipt(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"id": id})
 }
 
+// getPoints handles the retrieval of points for a given receipt by its ID
+// It validates the ID then gets the receipt by the ID and calculates the points
 func getPoints(c *gin.Context) {
 	id := c.Param("id")
 
@@ -46,6 +51,7 @@ func getPoints(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"Points": points})
 }
 
+// getHealth provides a simple health check endpoint to see if the API is running
 func getHealth(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"status": "OK"})
 }
