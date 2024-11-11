@@ -9,6 +9,44 @@ import (
 	"unicode"
 )
 
+// Regular expressions for fiels validation
+var (
+	idPattern               = regexp.MustCompile(`^\S+$`)        // Checks for no whitespace in ID
+	retailerPattern         = regexp.MustCompile(`^[\w\s\-&]+$`) // Allows for alphanumericm, whitespace, hyphens and ampersand
+	totalPattern            = regexp.MustCompile(`^\d+\.\d{2}$`) // Checks total for two decimal places
+	shortDescriptionPattern = regexp.MustCompile(`^[\w\s\-]+$`)  // Allows alphanumeric, whitespace and hyphens
+)
+
+// ValidateReceipt checks each field of a receipt based on regex patterns and minimum item count
+func ValidateReceipt(receipt Receipt) error {
+	if !retailerPattern.MatchString(receipt.Retailer) {
+		return errors.New("invalid format for retailer")
+	}
+	if !totalPattern.MatchString(receipt.Total) {
+		return errors.New("invalid format for total")
+	}
+	if len(receipt.Items) == 0 {
+		return errors.New("items array must contain at least one item")
+	}
+	for _, item := range receipt.Items {
+		if !shortDescriptionPattern.MatchString(item.ShortDescription) {
+			return errors.New("invalid format for item shortDescription")
+		}
+		if !totalPattern.MatchString(item.Price) {
+			return errors.New("invalid format for item price")
+		}
+	}
+	return nil
+}
+
+// ValidateID ensures that the receipt ID follows the specified pattern
+func ValidateID(id string) error {
+	if !idPattern.MatchString(id) {
+		return errors.New("invalid format for ID")
+	}
+	return nil
+}
+
 // calculatePoints calculates total points for the a receipt by following the given rules
 func calculatePoints(receipt Receipt) int {
 	points := calculateRetailerPoints(receipt.Retailer)

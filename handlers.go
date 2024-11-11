@@ -17,6 +17,11 @@ func processReceipt(c *gin.Context) {
 		return
 	}
 
+	if err := ValidateReceipt(receipt); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
 	id := uuid.New().String()
 	receipts[id] = receipt
 	c.JSON(http.StatusOK, gin.H{"id": id})
@@ -24,6 +29,12 @@ func processReceipt(c *gin.Context) {
 
 func getPoints(c *gin.Context) {
 	id := c.Param("id")
+
+	if err := ValidateID(id); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
 	receipt, exists := receipts[id]
 
 	if !exists {
